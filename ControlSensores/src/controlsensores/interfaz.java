@@ -4,7 +4,19 @@
  * and open the template in the editor.
  */
 package controlsensores;
+import java.util.ArrayList;
 import javax.swing.ImageIcon;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
+import java.io.BufferedReader;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
+import javax.swing.DefaultComboBoxModel;
+import java.util.stream.Collectors;
 
 /**
  *
@@ -15,10 +27,37 @@ public class interfaz extends javax.swing.JFrame {
     /**
      * Creates new form interfaz
      */
+    ArrayList<Sensor> _sensores;
+    ArrayList<String> _nomSensor;
     public interfaz() {
         initComponents();
+        _nomSensor= new ArrayList<>(); 
+        cargarSensor();
     }
 
+    void cargarSensor(){  
+        try{
+         String Json = getResourceFileAsString("sensores.JSON");
+          Gson gson = new Gson();   
+         if(!Json.trim().equals(""))
+         {     
+          java.lang.reflect.Type tipo = new TypeToken<ArrayList<Sensor>>(){}.getType();
+         _sensores  = gson.fromJson(Json, tipo);
+         for(Sensor se :_sensores)_nomSensor.add(se.getNombre());
+         cb_sensor.setModel(new DefaultComboBoxModel(_nomSensor.toArray()));
+         }
+         else _sensores = new ArrayList<>();
+        }
+        catch(Exception e) {
+            System.err.println("JsonSyntaxException: " + e.getMessage());
+        }
+    }
+    
+    public String getResourceFileAsString(String resourceFileName) {
+    InputStream is = getClass().getResourceAsStream(resourceFileName);
+    BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+    return reader.lines().collect(Collectors.joining("\n"));
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -32,11 +71,18 @@ public class interfaz extends javax.swing.JFrame {
         lb_sensor = new javax.swing.JLabel();
         tb_power = new javax.swing.JToggleButton();
         lb_status = new javax.swing.JLabel();
+        bt_dlt = new javax.swing.JButton();
+        bt_add = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setResizable(false);
 
         cb_sensor.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        cb_sensor.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                cb_sensorItemStateChanged(evt);
+            }
+        });
 
         lb_sensor.setText("sensor");
 
@@ -50,38 +96,61 @@ public class interfaz extends javax.swing.JFrame {
         lb_status.setIcon(new javax.swing.ImageIcon(getClass().getResource("/controlsensores/icons/ledred.png"))); // NOI18N
         lb_status.setText("off");
 
+        bt_dlt.setText("eliminar");
+        bt_dlt.setActionCommand("eliminar");
+        bt_dlt.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bt_dltActionPerformed(evt);
+            }
+        });
+
+        bt_add.setText("agregar");
+        bt_add.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bt_addActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addComponent(tb_power, javax.swing.GroupLayout.PREFERRED_SIZE, 131, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGroup(layout.createSequentialGroup()
-                            .addGap(73, 73, 73)
-                            .addComponent(lb_status))
-                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                            .addGap(23, 23, 23)
+                            .addContainerGap()
                             .addComponent(lb_sensor)
-                            .addGap(26, 26, 26)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                             .addComponent(cb_sensor, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(37, 37, 37)
-                        .addComponent(tb_power, javax.swing.GroupLayout.PREFERRED_SIZE, 131, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(21, Short.MAX_VALUE))
+                        .addGap(26, 26, 26)
+                        .addComponent(lb_status)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(bt_add)
+                    .addComponent(bt_dlt))
+                .addContainerGap(41, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(29, 29, 29)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(cb_sensor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lb_sensor))
-                .addGap(18, 18, 18)
-                .addComponent(lb_status)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(25, 25, 25)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(lb_sensor)
+                            .addComponent(cb_sensor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(bt_add))
+                        .addGap(14, 14, 14)
+                        .addComponent(lb_status))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(54, 54, 54)
+                        .addComponent(bt_dlt)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(tb_power, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(41, Short.MAX_VALUE))
+                .addContainerGap(19, Short.MAX_VALUE))
         );
 
         pack();
@@ -93,14 +162,73 @@ public class interfaz extends javax.swing.JFrame {
             tb_power.setIcon(new ImageIcon(getClass().getResource("/controlsensores/icons/on.png")));
             lb_status.setIcon(new ImageIcon(getClass().getResource("/controlsensores/icons/ledgreen.png")));
             lb_status.setText("on");
+            cambiarStatus(true);
+            
         }
         else{
               tb_power.setIcon(new ImageIcon(getClass().getResource("/controlsensores/icons/off.png")));
                lb_status.setIcon(new ImageIcon(getClass().getResource("/controlsensores/icons/ledred.png")));
                 lb_status.setText("off");
+               cambiarStatus(false);
         }
     }//GEN-LAST:event_tb_powerActionPerformed
+    
+    private void cambiarStatus(boolean status){
+        getSensorByName(cb_sensor.getSelectedItem().toString()).setStatus(status);  
+        guardarJson();       
+    }
+    private void bt_addActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bt_addActionPerformed
+        // TODO add your handling code here:
+        AgregarSensor winsensor = new AgregarSensor(this,true) ;
+        winsensor.setSensores(_sensores);
+        winsensor.setVisible(true);
+        _nomSensor.clear();
+        for(Sensor se :_sensores)_nomSensor.add(se.getNombre());    
+        guardarJson();
+        cb_sensor.setModel(new DefaultComboBoxModel(_nomSensor.toArray()));
+    }//GEN-LAST:event_bt_addActionPerformed
 
+    private void bt_dltActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bt_dltActionPerformed
+        // TODO add your handling code here:
+        _sensores.remove(getSensorByName(cb_sensor.getSelectedItem().toString()));
+        for(Sensor se :_sensores)_nomSensor.add(se.getNombre());    
+        guardarJson();
+        cb_sensor.setModel(new DefaultComboBoxModel(_nomSensor.toArray()));
+    }//GEN-LAST:event_bt_dltActionPerformed
+
+    private Sensor getSensorByName(String name){
+            for(int i=0; i<_sensores.size();i++){
+            if(cb_sensor.getSelectedItem().toString()==_sensores.get(i).getNombre())return _sensores.get(i);
+        } 
+            return null;
+    }
+    private void cb_sensorItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cb_sensorItemStateChanged
+        // TODO add your handling code here:
+        Sensor se =getSensorByName(cb_sensor.getSelectedItem().toString());
+         if(se.getStatus()){
+            tb_power.setIcon(new ImageIcon(getClass().getResource("/controlsensores/icons/on.png")));
+            lb_status.setIcon(new ImageIcon(getClass().getResource("/controlsensores/icons/ledgreen.png")));
+            lb_status.setText("on");           
+        }
+        else{
+              tb_power.setIcon(new ImageIcon(getClass().getResource("/controlsensores/icons/off.png")));
+               lb_status.setIcon(new ImageIcon(getClass().getResource("/controlsensores/icons/ledred.png")));
+                lb_status.setText("off");
+        }       
+    }//GEN-LAST:event_cb_sensorItemStateChanged
+     void guardarJson(){
+        
+          try(Writer writer =  new OutputStreamWriter(new FileOutputStream(getClass().getResource("sensores.JSON").toURI().getPath()),"UTF-8"))
+        {        
+           Gson gson = new GsonBuilder().setPrettyPrinting().create();
+           gson.toJson(_sensores,writer);
+           writer.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+      
+     }
     /**
      * @param args the command line arguments
      */
@@ -137,6 +265,8 @@ public class interfaz extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton bt_add;
+    private javax.swing.JButton bt_dlt;
     private javax.swing.JComboBox<String> cb_sensor;
     private javax.swing.JLabel lb_sensor;
     private javax.swing.JLabel lb_status;
