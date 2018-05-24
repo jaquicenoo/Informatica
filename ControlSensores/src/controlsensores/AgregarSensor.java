@@ -57,12 +57,19 @@ public class AgregarSensor extends javax.swing.JDialog {
         tf_direccion = new javax.swing.JTextField();
         bt_aceptar = new javax.swing.JButton();
         bt_descartar = new javax.swing.JButton();
+        jLabel3 = new javax.swing.JLabel();
+        tf_unidades = new javax.swing.JTextField();
+        jLabel4 = new javax.swing.JLabel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        ta_descripciòn = new javax.swing.JTextArea();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setMaximumSize(new java.awt.Dimension(366, 317));
+        setMinimumSize(new java.awt.Dimension(366, 317));
 
         jLabel1.setText("nombre del sensor");
 
-        jLabel2.setText("Direccion IP");
+        jLabel2.setText("Ubicaciòn");
 
         bt_aceptar.setText("aceptar");
         bt_aceptar.addActionListener(new java.awt.event.ActionListener() {
@@ -78,6 +85,14 @@ public class AgregarSensor extends javax.swing.JDialog {
             }
         });
 
+        jLabel3.setText("unidades");
+
+        jLabel4.setText("descripciòn");
+
+        ta_descripciòn.setColumns(20);
+        ta_descripciòn.setRows(5);
+        jScrollPane1.setViewportView(ta_descripciòn);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -87,13 +102,17 @@ public class AgregarSensor extends javax.swing.JDialog {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel1)
                     .addComponent(jLabel2)
-                    .addComponent(bt_aceptar))
+                    .addComponent(bt_aceptar)
+                    .addComponent(jLabel3)
+                    .addComponent(jLabel4))
                 .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(tf_nombre, javax.swing.GroupLayout.DEFAULT_SIZE, 194, Short.MAX_VALUE)
+                    .addComponent(tf_direccion, javax.swing.GroupLayout.DEFAULT_SIZE, 194, Short.MAX_VALUE)
                     .addComponent(bt_descartar)
-                    .addComponent(tf_direccion, javax.swing.GroupLayout.PREFERRED_SIZE, 194, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(tf_nombre, javax.swing.GroupLayout.PREFERRED_SIZE, 194, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(82, Short.MAX_VALUE))
+                    .addComponent(tf_unidades, javax.swing.GroupLayout.DEFAULT_SIZE, 194, Short.MAX_VALUE)
+                    .addComponent(jScrollPane1))
+                .addContainerGap(48, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -106,7 +125,15 @@ public class AgregarSensor extends javax.swing.JDialog {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
                     .addComponent(tf_direccion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 32, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel3)
+                    .addComponent(tf_unidades, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel4)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 25, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(bt_aceptar)
                     .addComponent(bt_descartar))
@@ -118,7 +145,7 @@ public class AgregarSensor extends javax.swing.JDialog {
 
     private void bt_aceptarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bt_aceptarActionPerformed
         // TODO add your handling code here:
-        sensores.add(new Sensor(tf_nombre.getText(), tf_direccion.getText()));
+        sensores.add(new Sensor(tf_nombre.getText(), tf_direccion.getText(),tf_unidades.getText(),ta_descripciòn.getText()));
         JOptionPane.showMessageDialog(null, "Sensor Agregado", "InfoBox: " , JOptionPane.INFORMATION_MESSAGE);
         this.dispose();
     }//GEN-LAST:event_bt_aceptarActionPerformed
@@ -175,7 +202,12 @@ public class AgregarSensor extends javax.swing.JDialog {
     private javax.swing.JButton bt_descartar;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JTextArea ta_descripciòn;
     private javax.swing.JTextField tf_direccion;
     private javax.swing.JTextField tf_nombre;
+    private javax.swing.JTextField tf_unidades;
     // End of variables declaration//GEN-END:variables
 }
