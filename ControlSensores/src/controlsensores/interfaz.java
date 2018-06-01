@@ -8,13 +8,17 @@ import java.util.ArrayList;
 import javax.swing.ImageIcon;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
 import java.io.BufferedReader;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import javax.swing.DefaultComboBoxModel;
 import java.util.stream.Collectors;
 
@@ -29,26 +33,34 @@ public class interfaz extends javax.swing.JFrame {
      */
     ArrayList<Sensor> _sensores;
     ArrayList<String> _nomSensor;
+    String _path;
     public interfaz() {
         initComponents();
         _nomSensor= new ArrayList<>(); 
-        cargarSensor();
+        _path=System.getProperty("user.dir")+"\\src\\controlsensores\\";
+        cargarSensor();     
     }
 
     void cargarSensor(){  
         try{
-         String Json = getResourceFileAsString("sensores.JSON");
+            
+
+         String Json= new String(Files.readAllBytes(Paths.get("sensores.JSON")));
+//         String Json = getResourceFileAsString("sensores.JSON");
           Gson gson = new Gson();   
          if(!Json.trim().equals(""))
          {     
           java.lang.reflect.Type tipo = new TypeToken<ArrayList<Sensor>>(){}.getType();
          _sensores  = gson.fromJson(Json, tipo);
-         for(Sensor se :_sensores)_nomSensor.add(se.getNombre());
+         _sensores.forEach((se) -> {
+             _nomSensor.add(se.getNombre());
+             });
          cb_sensor.setModel(new DefaultComboBoxModel(_nomSensor.toArray()));
+         jTextArea1.setText(_sensores.get(0).getDescripcion());
          }
          else _sensores = new ArrayList<>();
         }
-        catch(Exception e) {
+        catch(IOException e) {
             System.err.println("JsonSyntaxException: " + e.getMessage());
         }
     }
@@ -73,6 +85,8 @@ public class interfaz extends javax.swing.JFrame {
         lb_status = new javax.swing.JLabel();
         bt_dlt = new javax.swing.JButton();
         bt_add = new javax.swing.JButton();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jTextArea1 = new javax.swing.JTextArea();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setResizable(false);
@@ -109,6 +123,12 @@ public class interfaz extends javax.swing.JFrame {
             }
         });
 
+        jTextArea1.setColumns(20);
+        jTextArea1.setRows(5);
+        jTextArea1.setMaximumSize(new java.awt.Dimension(164, 94));
+        jTextArea1.setMinimumSize(new java.awt.Dimension(164, 94));
+        jScrollPane1.setViewportView(jTextArea1);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -116,40 +136,45 @@ public class interfaz extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(tb_power, javax.swing.GroupLayout.PREFERRED_SIZE, 131, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
+                                .addContainerGap()
                                 .addComponent(lb_sensor)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(cb_sensor, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(26, 26, 26)
-                        .addComponent(lb_status)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(cb_sensor, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(16, 16, 16)
+                                .addComponent(lb_status)
+                                .addGap(18, 18, 18)
+                                .addComponent(tb_power, javax.swing.GroupLayout.PREFERRED_SIZE, 131, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING))
+                .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(bt_add)
                     .addComponent(bt_dlt))
-                .addContainerGap(41, Short.MAX_VALUE))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(cb_sensor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lb_sensor))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(25, 25, 25)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(lb_sensor)
-                            .addComponent(cb_sensor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(bt_add))
-                        .addGap(14, 14, 14)
-                        .addComponent(lb_status))
+                        .addComponent(bt_add)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(bt_dlt))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(54, 54, 54)
-                        .addComponent(bt_dlt)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(tb_power, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(19, Short.MAX_VALUE))
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(tb_power, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(lb_status))))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
@@ -182,28 +207,35 @@ public class interfaz extends javax.swing.JFrame {
         winsensor.setSensores(_sensores);
         winsensor.setVisible(true);
         _nomSensor.clear();
-        for(Sensor se :_sensores)_nomSensor.add(se.getNombre());    
+        _sensores.forEach((se) -> {    
+            _nomSensor.add(se.getNombre());
+        });
         guardarJson();
         cb_sensor.setModel(new DefaultComboBoxModel(_nomSensor.toArray()));
     }//GEN-LAST:event_bt_addActionPerformed
 
     private void bt_dltActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bt_dltActionPerformed
         // TODO add your handling code here:
+        _nomSensor.clear();
         _sensores.remove(getSensorByName(cb_sensor.getSelectedItem().toString()));
-        for(Sensor se :_sensores)_nomSensor.add(se.getNombre());    
+        _sensores.forEach((se) -> {    
+            _nomSensor.add(se.getNombre());
+        });
         guardarJson();
         cb_sensor.setModel(new DefaultComboBoxModel(_nomSensor.toArray()));
+        if(!_sensores.isEmpty())jTextArea1.setText(_sensores.get(0).getDescripcion());
     }//GEN-LAST:event_bt_dltActionPerformed
 
     private Sensor getSensorByName(String name){
             for(int i=0; i<_sensores.size();i++){
-            if(cb_sensor.getSelectedItem().toString()==_sensores.get(i).getNombre())return _sensores.get(i);
+            if(cb_sensor.getSelectedItem().toString() == null ? _sensores.get(i).getNombre() == null : cb_sensor.getSelectedItem().toString().equals(_sensores.get(i).getNombre()))return _sensores.get(i);
         } 
             return null;
     }
     private void cb_sensorItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cb_sensorItemStateChanged
         // TODO add your handling code here:
         Sensor se =getSensorByName(cb_sensor.getSelectedItem().toString());
+        jTextArea1.setText(se.getDescripcion());
          if(se.getStatus()){
             tb_power.setIcon(new ImageIcon(getClass().getResource("/controlsensores/icons/on.png")));
             lb_status.setIcon(new ImageIcon(getClass().getResource("/controlsensores/icons/ledgreen.png")));
@@ -216,14 +248,14 @@ public class interfaz extends javax.swing.JFrame {
         }       
     }//GEN-LAST:event_cb_sensorItemStateChanged
      void guardarJson(){
-        
-          try(Writer writer =  new OutputStreamWriter(new FileOutputStream(getClass().getResource("sensores.JSON").toURI().getPath()),"UTF-8"))
+
+//          try(Writer writer =  new OutputStreamWriter(new FileOutputStream(getClass().getResource("sensores.JSON").getPath()),"UTF-8"))
+            try(Writer writer =  new OutputStreamWriter(new FileOutputStream("sensores.JSON"),"UTF-8"))
         {        
            Gson gson = new GsonBuilder().setPrettyPrinting().create();
            gson.toJson(_sensores,writer);
            writer.close();
         } catch (Exception e) {
-            e.printStackTrace();
         }
 
       
@@ -239,7 +271,7 @@ public class interfaz extends javax.swing.JFrame {
          */
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
+                if ("Windows".equals(info.getName())) {
                     javax.swing.UIManager.setLookAndFeel(info.getClassName());
                     break;
                 }
@@ -267,6 +299,8 @@ public class interfaz extends javax.swing.JFrame {
     private javax.swing.JButton bt_add;
     private javax.swing.JButton bt_dlt;
     private javax.swing.JComboBox<String> cb_sensor;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JTextArea jTextArea1;
     private javax.swing.JLabel lb_sensor;
     private javax.swing.JLabel lb_status;
     private javax.swing.JToggleButton tb_power;

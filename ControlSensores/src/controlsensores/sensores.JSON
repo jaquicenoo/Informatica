@@ -1,0 +1,18 @@
+[
+  {
+    "_idSensor": "f8409b19-0132-4d5e-b8ec-88fd028c2882",
+    "_nombre": "CO2",
+    "_status": true,
+    "_direcccion": "alcala",
+    "_unidades": "ppm",
+    "_descripcion": "mide concentracion co2"
+  },
+  {
+    "_idSensor": "b26874ea-c090-4aef-97a4-3d9598c458ae",
+    "_nombre": "asd",
+    "_status": false,
+    "_direcccion": "asd",
+    "_unidades": "sad",
+    "_descripcion": "asdasdsadasdasdsadasdasdasdasdddddddddddddddddddddddddd"
+  }
+]
